@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/jhillyerd/enmime"
+	"github.com/vinhjaxt/enmime"
 )
 
 func TestSMTPSend(t *testing.T) {

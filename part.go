@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/gogs/chardet"
-	"github.com/jhillyerd/enmime/internal/coding"
-	"github.com/jhillyerd/enmime/mediatype"
+	"github.com/vinhjaxt/enmime/internal/coding"
+	"github.com/vinhjaxt/enmime/mediatype"
 	"github.com/pkg/errors"
 )
 

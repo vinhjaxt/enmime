@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jhillyerd/enmime"
-	"github.com/jhillyerd/enmime/internal/test"
+	"github.com/vinhjaxt/enmime"
+	"github.com/vinhjaxt/enmime/internal/test"
 )
 
 func TestEncodePartEmpty(t *testing.T) {

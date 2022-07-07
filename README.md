@@ -1,7 +1,7 @@
 # enmime
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/jhillyerd/enmime)][Pkg Docs]
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/vinhjaxt/enmime)][Pkg Docs]
 [![Build Status](https://travis-ci.org/jhillyerd/enmime.svg?branch=master)][Build Status]
-[![Go Report Card](https://goreportcard.com/badge/github.com/jhillyerd/enmime)][Go Report Card]
+[![Go Report Card](https://goreportcard.com/badge/github.com/vinhjaxt/enmime)][Go Report Card]
 [![Coverage Status](https://coveralls.io/repos/github/jhillyerd/enmime/badge.svg?branch=master)][Coverage Status]
 
 
@@ -29,14 +29,14 @@ See [CONTRIBUTING.md] for more information.
 enmime is written in [Go][Golang].
 
 enmime is open source software released under the MIT License.  The latest
-version can be found at https://github.com/jhillyerd/enmime
+version can be found at https://github.com/vinhjaxt/enmime
 
 
 [Build Status]:    https://travis-ci.org/jhillyerd/enmime
-[Builder Usage]:   https://github.com/jhillyerd/enmime/wiki/Builder-Usage 
+[Builder Usage]:   https://github.com/vinhjaxt/enmime/wiki/Builder-Usage 
 [Coverage Status]: https://coveralls.io/github/jhillyerd/enmime
-[CONTRIBUTING.md]: https://github.com/jhillyerd/enmime/blob/master/CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/vinhjaxt/enmime/blob/master/CONTRIBUTING.md
 [Inbucket]:        http://www.inbucket.org/
 [Golang]:          http://golang.org/
-[Go Report Card]:  https://goreportcard.com/report/github.com/jhillyerd/enmime
-[Pkg Docs]:        https://pkg.go.dev/github.com/jhillyerd/enmime
+[Go Report Card]:  https://goreportcard.com/report/github.com/vinhjaxt/enmime
+[Pkg Docs]:        https://pkg.go.dev/github.com/vinhjaxt/enmime
