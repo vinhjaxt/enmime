@@ -75,6 +75,49 @@ func (p *Part) Encode(writer io.Writer) error {
 	return b.Flush()
 }
 
+// RawEncode writes this Part and all its children to the specified writer in MIME format.
+func (p *Part) RawEncode(writer io.Writer) error {
+	// Encode this part.
+	b := bufio.NewWriter(writer)
+	if _, err := b.Write(p.RawHeader); err != nil {
+		return err
+	}
+	if len(p.RawContent) > 0 {
+		if _, err := b.Write(crnl); err != nil {
+			return err
+		}
+		if _, err := b.Write(p.RawContent); err != nil {
+			return err
+		}
+	}
+	if p.FirstChild == nil {
+		return b.Flush()
+	}
+	// Encode children.
+	endMarker := []byte("\r\n--" + p.Boundary + "--")
+	marker := endMarker[:len(endMarker)-2]
+	c := p.FirstChild
+	for c != nil {
+		if _, err := b.Write(marker); err != nil {
+			return err
+		}
+		if _, err := b.Write(crnl); err != nil {
+			return err
+		}
+		if err := c.RawEncode(b); err != nil {
+			return err
+		}
+		c = c.NextSibling
+	}
+	if _, err := b.Write(endMarker); err != nil {
+		return err
+	}
+	if _, err := b.Write(crnl); err != nil {
+		return err
+	}
+	return b.Flush()
+}
+
 // setupMIMEHeaders determines content transfer encoding, generates a boundary string if required,
 // then sets the Content-Type (type, charset, filename, boundary) and Content-Disposition headers.
 func (p *Part) setupMIMEHeaders() transferEncoding {
