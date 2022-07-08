@@ -9,10 +9,10 @@ import (
 	"net/textproto"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/vinhjaxt/enmime/internal/coding"
 	"github.com/vinhjaxt/enmime/internal/stringutil"
 	"github.com/vinhjaxt/enmime/mediatype"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -124,9 +124,14 @@ func readHeader(r *bufio.Reader, p *Part) (textproto.MIMEHeader, error) {
 	buf := &bytes.Buffer{}
 	tp := textproto.NewReader(r)
 	firstHeader := true
+	var rawHeader []byte
 	for {
 		// Pull out each line of the headers as a temporary slice s
 		s, err := tp.ReadLineBytes()
+		if len(s) != 0 {
+			rawHeader = append(rawHeader, s...)
+			rawHeader = append(rawHeader, []byte{'\r', '\n'}...)
+		}
 		if err != nil {
 			buf.Write([]byte{'\r', '\n'})
 			break
@@ -180,6 +185,7 @@ func readHeader(r *bufio.Reader, p *Part) (textproto.MIMEHeader, error) {
 
 	buf.Write([]byte{'\r', '\n'})
 	tr := textproto.NewReader(bufio.NewReader(buf))
+	p.RawHeader = rawHeader
 	header, err := tr.ReadMIMEHeader()
 	return header, errors.WithStack(err)
 }

@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/gogs/chardet"
+	"github.com/pkg/errors"
 	"github.com/vinhjaxt/enmime/internal/coding"
 	"github.com/vinhjaxt/enmime/mediatype"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -31,6 +31,8 @@ type Part struct {
 	FirstChild  *Part                // FirstChild is the top most child of this part.
 	NextSibling *Part                // NextSibling of this part.
 	Header      textproto.MIMEHeader // Header for this Part.
+	RawHeader   []byte               // Raw Header bytes.
+	RootRawBody []byte               // Raw Header bytes.
 
 	Boundary          string            // Boundary marker used within this part.
 	ContentID         string            // ContentID header for cid URL scheme.
@@ -42,9 +44,10 @@ type Part struct {
 	Charset           string            // The content charset encoding, may differ from charset in header.
 	OrigCharset       string            // The original content charset when a different charset was detected.
 
-	Errors   []*Error // Errors encountered while parsing this part.
-	Content  []byte   // Content after decoding, UTF-8 conversion if applicable.
-	Epilogue []byte   // Epilogue contains data following the closing boundary marker.
+	Errors     []*Error // Errors encountered while parsing this part.
+	Content    []byte   // Content after decoding, UTF-8 conversion if applicable.
+	RawContent []byte   // Raw Content bytes.
+	Epilogue   []byte   // Epilogue contains data following the closing boundary marker.
 }
 
 // NewPart creates a new Part object.
@@ -252,6 +255,15 @@ func (p *Part) convertFromStatedCharset(r io.Reader) io.Reader {
 func (p *Part) decodeContent(r io.Reader) error {
 	// contentReader will point to the end of the content decoding pipeline.
 	contentReader := r
+
+	rawContent, err := ioutil.ReadAll(contentReader)
+	if err != nil {
+		return err
+	}
+	p.RawContent = rawContent
+
+	contentReader = bytes.NewReader(rawContent)
+
 	// b64cleaner aggregates errors, must maintain a reference to it to get them later.
 	var b64cleaner *coding.Base64Cleaner
 	// Build content decoding reader.
@@ -356,6 +368,15 @@ func (p Parser) ReadParts(r io.Reader) (*Part, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	rawBody, err := ioutil.ReadAll(br)
+	if err != nil {
+		return nil, err
+	}
+
+	root.RootRawBody = rawBody
+
+	br = bufio.NewReader(bytes.NewReader(rawBody))
 
 	if detectMultipartMessage(root, p.multipartWOBoundaryAsSinglePart) {
 		// Content is multipart, parse it.
